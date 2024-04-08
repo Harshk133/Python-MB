@@ -271,7 +271,7 @@ def enter_data():
     return render_template('enter_data.html', document=document, placeholders=placeholders)
 
 def get_document_path_from_database(document_name):
-    db = db
+    # db = db
     print("teh name of the document is see here", document_name)
     document = db.template_cards.find_one({"title": document_name})
     # document = db.template_cards.find_one({"title": "Template"})
