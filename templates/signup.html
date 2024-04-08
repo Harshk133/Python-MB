@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup</title>
+</head>
+<body>
+    {% if error == True %}
+        <p style="font-weight: bolder; color: red;">{{ message }}</p>
+    {% else %}
+        <p style="font-weight: bolder; color: green;">{{ message }}</p>
+    {% endif %}
+    <h2>User Signup</h2>
+    <form id="signupForm" action="/signup" method="POST">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="useremail">Useremail:</label><br>
+        <input type="text" id="useremail" name="useremail" required><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Signup</button>
+        <p>Already have an Account ?<a href="/login">Login</a></p>
+    </form>
+</body>
+</html>

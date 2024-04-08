@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Document to Mugbit!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="shortcut icon" href="static/Mugbit.PNG" type="image/x-icon">
+
+</head>
+
+<body>
+    <!-- Hamburger -->
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+        style="background-color: aliceblue; border: none;" data-bs-target="#offcanvasScrolling"
+        aria-controls="offcanvasScrolling"><i class="fa-solid fa-bars" style="color: black;"></i></i></i></button>
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+        id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" class="sidebar" style="width: 20%;">
+
+        <div class="offcanvas-header">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <img src="{{ url_for('static', filename='Mugbit.PNG') }}" class="logo" alt="Image">
+            <h1 class="greet text-3xl" style="font-weight: bold;"><span>Hello, {{username}}</span></h1>
+            <ul>
+                <li>
+                    <button type="button" class="btn btn-light" style="text-align: left;">
+                        <i class="fa-solid fa-house"></i>
+
+                        <a href="/" style="color: black; text-decoration: none;">Home</a>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-light" style="text-align: left;">
+                        <i class="fa-solid fa-user"></i>
+                        <a href="/profile" style="color: black; text-decoration: none;">Profile</a>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-light" style="text-align: left;">
+                        <i class="fa-sharp fa-solid fa-file-arrow-up"></i>
+
+                        <a href="/upload" style="color: black; text-decoration: none;">Upload</a>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-light" style="text-align: left;">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-light" style="text-align: left;">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <a href="/logout" class="link">Logout</a>
+                    </button>
+                </li>
+                <li style="padding-top: 50%;">
+                    <p>
+                        <small>Terms & Condition Applied! </small><br>
+                        <small>Copyright &copy <span id="yr"></span></small>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <main>
+        <div class="container"
+            style="margin-left: 200px; display: flex; justify-content: space-evenly; flex-wrap: wrap; width: 70%; flex-direction: column;">
+
+            <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-black">Update Your Template Here!!⚡</h1>
+            <br>
+            <form action="{{ url_for('update_document', document_id=document['_id']) }}" method="post" enctype="multipart/form-data">
+                <!-- <div class="imageurl">
+                    <label for="img" class="leading-7 text-xl text-white-400" form="image">Provide the image for the
+                        Document❕</label>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="img" name="images[]" accept="image/*" multiple
+                            >
+                            <label class="input-group-text" for="document">Upload</label>
+                        </div>
+                    </div> -->
+                    <!-- <input type="file" name="images[]" id="img" accept="image/*" multiple required /> -->
+
+                <br>
+
+                <div class="relative title">
+                    <label for="document_title" class="leading-7 text-xl text-white-400">Enter Your Document Title
+                        ✔</label>
+                    <input type="text" id="document_title" name="document_title"
+                        class="w-full bg-white-800 bg-opacity-40 rounded border border-white-700 focus:border-orange-500 focus:bg-white-900 focus:ring-2 focus:ring-orange-900 text-base outline-none text-white-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" value="{{ document['title'] }}">
+                </div>
+
+                <br>
+
+                <!-- <div class="title">
+                    <label for="document_title">Enter Your Document Title</label>
+                    <input type="text" name="document_title" id="document_title" />
+                </div> -->
+
+                <!-- <div class="selection">
+                    <label for="todop">Select what type of Document you are providing?</label>
+                    <br>
+                    <select name="dt" id="dt">
+                        <option value="template">Document Template</option>
+                        <option value="pdf">PDF</option>
+                        <option value="docx">MS Document</option>
+                    </select>
+                </div> -->
+
+                <div class="selection">
+                    <label for="dt" class="leading-7 text-xl text-white-400">Select What Type of Document
+                        You
+                        are Providing❔</label>
+                    <select class="form-select" aria-label="Default select example" name="dt" id="dt">
+                        <option value="Template">Template</option>
+                        <option value="PDF">PDF</option>
+                        <option value="MS Document">MS Document</option>
+                    </select>
+                </div>
+
+                <br>
+
+                <label for="document_title" class="leading-7 text-xl text-white-400">Document Payment
+                    Preference❔</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="money" id="paid" value="paid">
+                    <label class="form-check-label" for="paid">
+                        Paid 💵
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="money" id="free" value="free" checked>
+                    <label class="form-check-label" for="free">
+                        Free 🆓
+                    </label>
+                </div>
+
+                <br>
+
+                <!-- <div class="paid">
+                    <label for="paid">Paid</label>
+                    <input type="radio" name="money" id="paid" value="True">
+                    <label for="free">Free</label>
+                    <input type="radio" name="money" id="free" value="False">
+                </div> -->
+
+                <!-- show if it is paid! -->
+
+                <div class="relative amount" id="amountbox">
+                    <label for="amount" class="leading-7 text-xl text-white-400">How many Rupees you want to charge from
+                        the user❔</label>
+                    <input type="number" id="amount" name="amount"
+                        class="w-full bg-white-800 bg-opacity-40 rounded border border-white-700 focus:border-orange-500 focus:bg-white-900 focus:ring-2 focus:ring-orange-900 text-base outline-none text-white-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                </div>
+
+                <br>
+
+                <!-- <div class="amount">
+                    <label for="amount">How many Rupees you want to charge from the user??</label>
+                    <br>
+                    <input type="number" name="amount" id="amount">
+                </div> -->
+
+                <div class="description">
+                    <label for="desc" class="leading-7 text-xl text-white-400">Provide Description for Your Document
+                        ℹ</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="desc" name="desc"
+                            style="height: 100px">{{ document['description'] }}</textarea>
+                        <label for="desc">Description</label>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- <div class="description">
+                    <label for="desc">Provide description of your Document!</label>
+                    <br>
+                    <textarea name="desc" id="desc" cols="30" rows="10"></textarea>
+                </div> -->
+
+                <!-- <div class="documenttemplate">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="document" name="document" accept=".docx,.pdf">
+                        <label class="input-group-text" for="document">Upload</label>
+                    </div>
+                </div> -->
+
+                <br>
+
+                <!-- <div class="documenttemplate">
+                    <input type="file" id="document" name="document" accept=".docx,.pdf" required>
+                </div> -->
+
+                <div class="button">
+                    <button type="submit" class="btn btn-success">Update 👍</button>
+                    <button type="reset" class="btn btn-danger">Reset 🔁</button>
+                    <!-- <input type="submit" value="Upload"> -->
+                    <!-- <input type="reset" value="Reset"> -->
+                </div>
+
+                <br>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the radio buttons and the input box
+            const paidRadio = document.getElementById("paid");
+            const amountInput = document.getElementById("amountbox");
+
+            // Initially hide the amount input box
+            amountInput.style.display = "none";
+
+            // Add event listener to the radio buttons
+            paidRadio.addEventListener("change", function () {
+                // Toggle the visibility of the input box based on the selected option
+                amountInput.style.display = paidRadio.checked ? "block" : "none";
+            });
+
+            // Get the free radio button
+            const freeRadio = document.getElementById("free");
+
+            // Add event listener to the free radio button
+            freeRadio.addEventListener("change", function () {
+                // Toggle the visibility of the input box based on the selected option
+                amountInput.style.display = freeRadio.checked ? "none" : "block";
+            });
+        });
+
+    </script>
+</body>
+
+</html>

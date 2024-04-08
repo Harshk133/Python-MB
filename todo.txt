@@ -1,0 +1,19 @@
+It seems like you have outlined several additional functionalities to implement. Let's break down each one:
+
+✅Implementing Star, ✅Views, ✅Used: You need to fetch these metrics from your database and display them alongside each document. These values should be updated whenever a user interacts with the document (e.g., views increment when someone views the document, stars increment when someone stars it, etc.).
+
+Implementing Payment Dialog for Paid Documents: For documents marked as paid, you need to integrate a payment gateway (such as Stripe, PayPal, etc.) to handle payments. When a user clicks "Use This" for a paid document, the payment dialog should open, allowing the user to complete the transaction. After successful payment, you can redirect the user to the next page.
+
+Implementing Search Functionality: Allow users to search for documents based on keywords or specific criteria. You'll need to implement a search mechanism that queries your database based on the user's input and displays the relevant results.
+
+Implementing Profile Page:
+
+Display user-specific information such as the number of documents created, followers, and following count.
+Show uploaded documents and starred documents by the user.
+Design the UI for the profile page to ensure it's visually appealing and user-friendly.
+
+Implementing Settings for Dark/Light Mode: Allow users to switch between dark and light mode for better readability and user preference. Implement a toggle switch in the settings section to let users choose their preferred mode.
+
+Each of these functionalities requires both frontend and backend implementation. Ensure you have the necessary routes, database queries, and frontend components to handle these features effectively.
+
+If you need specific help with any of these functionalities or encounter any issues during implementation, feel free to ask!
