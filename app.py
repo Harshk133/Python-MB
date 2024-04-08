@@ -16,14 +16,15 @@ from pymongo import MongoClient
 app = Flask(__name__)
 app.secret_key = 'jayganesh'
 # app.config['MONGO_URI'] = 'mongodb://localhost:27017/pymongo'
-# app.config['MONGO_URI'] = 'mongodb+srv://root:root@cluster0.0jmtyiz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-app.config['MONGO_URI'] = 'mongodb+srv://root:root@cluster0.0jmtyiz.mongodb.net/pymongo?retryWrites=true&w=majority&appName=Cluster0'
+MONGO_URI = "mongodb+srv://harsh:h1h2h3h4h5h6h7@cluster0.0jmtyiz.mongodb.net/pymongo?retryWrites=true&w=majority"
+client = MongoClient(MONGO_URI)
+db = client.get_database("pymongo")
 
 # * Define the upload directory and allowed file extensions
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-mongo = PyMongo(app)
+# mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 
 #~ Function 
@@ -39,7 +40,7 @@ def add_no_cache_headers(response):
 def login():
     error = None
     if request.method == 'POST':
-        users = mongo.db.users
+        users = db.users
         username = request.form['username']
         password = request.form['password']
 
@@ -61,7 +62,7 @@ def login():
 def signup():
     error = None 
     if request.method == 'POST':
-        users = mongo.db.users
+        users = db.users
         username = request.form['username']
         useremail= request.form['username']
         password = request.form['password']
@@ -97,7 +98,7 @@ def logout():
 def index():
     if 'username' in session:
         username = session['username']
-        documents = mongo.db.template_cards.find()
+        documents = db.template_cards.find()
         return render_template('index.html', username=username, documents=documents)
     else:
         return redirect(url_for('login'))
@@ -118,24 +119,24 @@ def profile():
         print("the value of the user id is", username)
 
         # Retrieve the list of document IDs starred by the user
-        starred_documents = mongo.db.stars.find({'user_id': username}, {'document_id': 1})
+        starred_documents = db.stars.find({'user_id': username}, {'document_id': 1})
 
         # Retrieve the details of the starred documents
         documents = []
         for starred_doc in starred_documents:
             document_id = starred_doc['document_id']
-            document = mongo.db.template_cards.find_one({'_id': ObjectId(document_id)})
+            document = db.template_cards.find_one({'_id': ObjectId(document_id)})
             if document:
                 documents.append(document)
 
         # query to getting the star documents
-        starred_count = mongo.db.stars.count_documents({'user_id': username})
+        starred_count = db.stars.count_documents({'user_id': username})
 
         # Retrieve the documents used by the user
-        used_documents = mongo.db.template_cards.find({'used_by': username})
+        used_documents = db.template_cards.find({'used_by': username})
 
         # Retrieve documents created by the user
-        user_documents = mongo.db.template_cards.find({'creator': username})
+        user_documents = db.template_cards.find({'creator': username})
 
         return render_template('profilepage.html', username=session.get("username"), starred_documents=documents, starred_count=starred_count, used_documents=used_documents, user_documents=user_documents)
 
@@ -149,14 +150,14 @@ def profile():
 def otherprofile(username):
     try:
         # Retrieve user profile data from the database
-        person = mongo.db.template_cards.find({'creator': username})
+        person = db.template_cards.find({'creator': username})
 
         if person:
             # Retrieve documents created by the user
-            user_documents = mongo.db.template_cards.find({'creator': username})
+            user_documents = db.template_cards.find({'creator': username})
 
             # Retrieve documents used by the user
-            used_documents = mongo.db.template_cards.find({'used_by': username})
+            used_documents = db.template_cards.find({'used_by': username})
 
             return render_template('otherprofilepage.html', username=username, used_documents=used_documents, user_documents=user_documents)
         else:
@@ -219,7 +220,7 @@ def submit_upload():
                 return redirect(request.url)
         
         # Insert document template card into the database
-        mongo.db.template_cards.insert_one({
+        db.template_cards.insert_one({
             "title": title,
             "description": description,
             "image_url": image_urls,
@@ -270,7 +271,7 @@ def enter_data():
     return render_template('enter_data.html', document=document, placeholders=placeholders)
 
 def get_document_path_from_database(document_name):
-    db = mongo.db
+    db = db
     print("teh name of the document is see here", document_name)
     document = db.template_cards.find_one({"title": document_name})
     # document = db.template_cards.find_one({"title": "Template"})
@@ -331,17 +332,17 @@ def star_document(document_id):
         # such as username or user ID retrieved from the request data.
 
         # Check if the document exists
-        document = mongo.db.template_cards.find_one({'_id': ObjectId(document_id)})
+        document = db.template_cards.find_one({'_id': ObjectId(document_id)})
 
         if document:
             # Check if the user has already starred the document
-            existing_star = mongo.db.stars.find_one({'document_id': document_id, 'user_id': user_id})
+            existing_star = db.stars.find_one({'document_id': document_id, 'user_id': user_id})
 
             if existing_star:
                 # If the user has already starred the document, remove the star
-                mongo.db.stars.delete_one({'document_id': document_id, 'user_id': user_id})
+                db.stars.delete_one({'document_id': document_id, 'user_id': user_id})
                 # Decrement the stars count for the document
-                mongo.db.template_cards.update_one(
+                db.template_cards.update_one(
                     {'_id': document['_id']},
                     {'$inc': {'stars': -1}}
                 )
@@ -349,9 +350,9 @@ def star_document(document_id):
                 return jsonify({'success': True, 'star_count': star_count, 'action': 'unstar'})
             else:
                 # If the user has not starred the document, add the star
-                mongo.db.stars.insert_one({'document_id': document_id, 'user_id': user_id})
+                db.stars.insert_one({'document_id': document_id, 'user_id': user_id})
                 # Increment the stars count for the document
-                mongo.db.template_cards.update_one(
+                db.template_cards.update_one(
                     {'_id': document['_id']},
                     {'$inc': {'stars': 1}}
                 )
@@ -377,19 +378,19 @@ def use_document(document_id):
         print("user id is", session, username)
 
         # Update the document's "used by" count
-        mongo.db.template_cards.update_one(
+        db.template_cards.update_one(
             {'_id': ObjectId(document_id)},
             {'$inc': {'uses': 1}}
         )
 
         # Add the user to the document's "used by" list
-        mongo.db.template_cards.update_one(
+        db.template_cards.update_one(
             {'_id': ObjectId(document_id)},
             {'$addToSet': {'used_by': username}}
         )
 
         # Update or insert the document usage count in a separate collection
-        mongo.db.document_usage.update_one(
+        db.document_usage.update_one(
             {'document_id': document_id},
             {'$inc': {'count': 1}},
             upsert=True  # If the document is not found, create a new entry
@@ -411,8 +412,8 @@ def search():
 
     if search_query:
         # Perform search query in the database (replace this with your actual database query)
-        # Assuming you have a collection named 'template_cards' in your MongoDB
-        search_results = mongo.db.template_cards.find({'title': {'$regex': search_query, '$options': 'i'}})
+        # Assuming you have a collection named 'template_cards' in your B
+        search_results = db.template_cards.find({'title': {'$regex': search_query, '$options': 'i'}})
 
         # Pass search results to the template for rendering
         return render_template('index.html', search_results=search_results, search_query=search_query)
@@ -430,7 +431,7 @@ def delete_document():
             return jsonify({"error": "Document ID not provided"}), 400
 
         # Delete the document template card from the database
-        result = mongo.db.template_cards.delete_one({"_id": ObjectId(document_id)})
+        result = db.template_cards.delete_one({"_id": ObjectId(document_id)})
 
         if result.deleted_count == 1:
             return jsonify({"success": True, "message": "Document template card deleted successfully"})
@@ -444,7 +445,7 @@ from flask import flash, redirect, render_template, request, url_for
 def update_document(document_id):
     if request.method == "GET":
         # Retrieve the existing document from the database
-        document = mongo.db.template_cards.find_one({"_id": ObjectId(document_id)})
+        document = db.template_cards.find_one({"_id": ObjectId(document_id)})
         if not document:
             flash("Document not found")
             return redirect(url_for("index"))
@@ -460,11 +461,11 @@ def update_document(document_id):
         charge_status = request.form.get("money")
         description = request.form.get("desc")
 
-        mongo.db.template_cards.update_one({"_id": ObjectId(document_id)}, {"$set": 
+        db.template_cards.update_one({"_id": ObjectId(document_id)}, {"$set": 
         {"title": title, "badge": document_type, "price": amount_price, "is_paid": charge_status, "description": description}})
 
         return redirect(url_for("index"))
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
