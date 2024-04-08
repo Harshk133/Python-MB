@@ -9,10 +9,15 @@ from docxtpl import DocxTemplate
 import tempfile
 from pymongo import MongoClient
 
+# root
+# mongodb+srv://root:<password>@cluster0.0jmtyiz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
 # ^ Here we initialize the python flask app
 app = Flask(__name__)
 app.secret_key = 'jayganesh'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/pymongo'
+# app.config['MONGO_URI'] = 'mongodb://localhost:27017/pymongo'
+# app.config['MONGO_URI'] = 'mongodb+srv://root:root@cluster0.0jmtyiz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+app.config['MONGO_URI'] = 'mongodb+srv://root:root@cluster0.0jmtyiz.mongodb.net/pymongo?retryWrites=true&w=majority&appName=Cluster0'
 
 # * Define the upload directory and allowed file extensions
 UPLOAD_FOLDER = 'static'
