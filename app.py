@@ -295,7 +295,7 @@ def star_document(document_id):
         user_id = session.get('username')  # If user ID is stored in the session
         print("user id is", user_id, session)
 
-        document = db.template_cards.find_one({'_id': bsonjs.ObjectId(document_id)})
+        document = db.template_cards.find_one({'_id': ObjectId(document_id)})
 
         if document:
             existing_star = db.stars.find_one({'document_id': document_id, 'user_id': user_id})
@@ -336,12 +336,12 @@ def use_document(document_id):
         print("user id is", session, username)
 
         db.template_cards.update_one(
-            {'_id': bsonjs.ObjectId(document_id)},
+            {'_id': ObjectId(document_id)},
             {'$inc': {'uses': 1}}
         )
 
         db.template_cards.update_one(
-            {'_id': bsonjs.ObjectId(document_id)},
+            {'_id': ObjectId(document_id)},
             {'$addToSet': {'used_by': username}}
         )
 
@@ -382,7 +382,7 @@ def delete_document():
         if not document_id:
             return jsonify({"error": "Document ID not provided"}), 400
 
-        result = db.template_cards.delete_one({"_id": bsonjs.ObjectId(document_id)})
+        result = db.template_cards.delete_one({"_id": ObjectId(document_id)})
 
         if result.deleted_count == 1:
             return jsonify({"success": True, "message": "Document template card deleted successfully"})
@@ -395,7 +395,7 @@ from flask import flash, redirect, render_template, request, url_for
 @app.route("/update_document/<string:document_id>", methods=["GET", "POST"])
 def update_document(document_id):
     if request.method == "GET":
-        document = db.template_cards.find_one({"_id": bsonjs.ObjectId(document_id)})
+        document = db.template_cards.find_one({"_id": ObjectId(document_id)})
         if not document:
             flash("Document not found")
             return redirect(url_for("index"))
@@ -409,7 +409,7 @@ def update_document(document_id):
         charge_status = request.form.get("money")
         description = request.form.get("desc")
 
-        db.template_cards.update_one({"_id": bsonjs.ObjectId(document_id)}, {"$set": 
+        db.template_cards.update_one({"_id": ObjectId(document_id)}, {"$set": 
         {"title": title, "badge": document_type, "price": amount_price, "is_paid": charge_status, "description": description}})
 
         return redirect(url_for("index"))
