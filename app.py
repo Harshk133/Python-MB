@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 import re
 from docx import Document
 from docxtpl import DocxTemplate
-import tempfile
 from pymongo import MongoClient
 
 # root
@@ -15,6 +14,7 @@ from pymongo import MongoClient
 # ^ Here we initialize the python flask app
 app = Flask(__name__)
 app.secret_key = 'jayganesh'
+app.config["SECRET_KEY"] = "89873232b323132909807667"
 # app.config['MONGO_URI'] = 'mongodb://localhost:27017/pymongo'
 MONGO_URI = "mongodb+srv://harsh:h1h2h3h4h5h6h7@cluster0.0jmtyiz.mongodb.net/pymongo?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URI)
@@ -274,10 +274,10 @@ def submit_data():
 def fill_document(document_path, placeholders_values):
     doc = DocxTemplate(document_path)
     doc.render(placeholders_values)
-    
-    filled_document_path = tempfile.NamedTemporaryFile(suffix='.docx', delete=False).name
+
+    filled_document_path = os.path.join(app.config['UPLOAD_FOLDER'], "Mugbit Document.docx")
     doc.save(filled_document_path)
-    
+
     return filled_document_path
 
 # ================== some essential actions ==================
@@ -357,12 +357,13 @@ from flask import request, render_template
 
 @app.route('/search', methods=['GET'])
 def search():
+    username = session['username']
     search_query = request.args.get('q')
 
     if search_query:
         search_results = db.template_cards.find({'title': {'$regex': search_query, '$options': 'i'}})
 
-        return render_template('index.html', search_results=search_results, search_query=search_query)
+        return render_template('index.html', username=username, search_results=search_results, search_query=search_query)
     else:
         return '<h1>Not Found!</h1>'
     

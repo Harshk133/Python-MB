@@ -16,6 +16,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="shortcut icon" href="static/Mugbit.PNG" type="image/x-icon">
+    <style>
+        .carousel-item {
+            border: 1px solid black;
+            width: 314px;
+            height: 314px;
+        }
+    </style>
 </head>
 
 <body>
@@ -102,9 +109,9 @@
                 {% if document.image_url %}
                 {% if document.image_url|length > 1 %}
                 <div id="carouselExample{{ loop.index }}" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
+                    <div class="carousel-inner" style="display: block; width: 314px; height: 314px;">
                         {% for image in document.image_url %}
-                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="carousel-item {% if loop.first %}active{% endif %} w-314 h-314">
                             <img src="{{ image }}" class="d-block w-100" alt="Image">
                         </div>
                         {% endfor %}
