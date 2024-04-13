@@ -9,7 +9,8 @@ from docxtpl import DocxTemplate
 from pymongo import MongoClient
 import bson
 from bson.objectid import ObjectId
-import bsonjs
+# from bson.objectid import ObjectId
+# import bsonjs
 # git commit 15
 
 # root
